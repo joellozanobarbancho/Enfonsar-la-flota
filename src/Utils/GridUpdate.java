@@ -1,6 +1,8 @@
 package Utils;
 
-public class GridUpdate {
+import java.io.Serializable;
+
+public class GridUpdate implements Serializable {
     private final String Grid;
 
     public GridUpdate(String asciiGrid) {

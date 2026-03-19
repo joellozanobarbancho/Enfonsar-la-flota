@@ -17,8 +17,9 @@ public class GridPrinter {
                 } else {
                     int cell = state.getCell(row, col);
 
-                    if (cell == 2) sb.append("1 ");         // barco tocado
+                    if (cell == 2) sb.append("1 ");         // tocado
                     else if (cell == 3) sb.append("0 ");    // agua
+                    else if (cell == 4) sb.append("X ");    // hundido
                     else sb.append("# ");                   // fallback
                 }
             }

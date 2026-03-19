@@ -49,14 +49,20 @@ public class GridGenerator {
     }
 
     private static void placeShip(GameState state, int row, int col, int shipSize, boolean horizontal) {
+        Ship ship = new Ship();
+
         if (horizontal) {
             for (int c = col; c < col + shipSize; c++) {
                 state.setCell(row, c, 1);
+                ship.addCell(row, c);
             }
         } else {
             for (int r = row; r < row + shipSize; r++) {
                 state.setCell(r, col, 1);
+                ship.addCell(r, col);
             }
         }
+
+        state.addShip(ship);
     }
 }

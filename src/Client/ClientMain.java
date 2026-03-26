@@ -30,17 +30,14 @@ public class ClientMain {
                     case GRID_UPDATE -> {
                         GridUpdate update = (GridUpdate) msg.getPayload();
                         System.out.println(update.getGrid());
-                        sendShot(); // ✔ aquí sí
+                        sendShot();
                     }
 
                     case SHOT_RESULT -> {
                         ServerResponse response = (ServerResponse) msg.getPayload();
                         System.out.println(response.getMessage());
 
-                        if (response.getType() == ServerResponseType.WIN) {
-                            System.out.println("Game Over.");
-                            return;
-                        }
+                        if (response.getType() == ServerResponseType.WIN) return;
                     }
 
                     default -> System.out.println("Unknown msg type...");
@@ -59,7 +56,7 @@ public class ClientMain {
         int col;
 
         while (true) {
-            System.out.println("Seleccione una fila: ");
+            System.out.println("Seleccione una fila: (0-9)");
             row = scanner.nextInt();
 
             if (row >= 0 && row < GRID_SIZE) break;
@@ -68,7 +65,7 @@ public class ClientMain {
         }
 
         while (true) {
-            System.out.println("Seleccione una columna: ");
+            System.out.println("Seleccione una columna: (0-9)");
             col = scanner.nextInt();
 
             if (col >= 0 && col < GRID_SIZE) break;

@@ -3,30 +3,61 @@ package Server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServerMain {
     private final int port;
     private GameState gameState;
 
+    private final List<ClientHandler> clients = new ArrayList<>();
+
     public ServerMain(int port) {
         this.port = port;
+    }
+
+    public synchronized void registerClient(ClientHandler handler) {
+        clients.add(handler);
+    }
+
+    public synchronized void unregisterClient(ClientHandler handler) {
+        clients.remove(handler);
+    }
+
+    public synchronized void disconnectAllClients() {
+        for (ClientHandler handler : clients) {
+            handler.forceDisconnect();
+        }
+        clients.clear();
+    }
+
+    public synchronized void onClientDisconnected() {
+        if (clients.isEmpty()) {
+            resetGame();
+        }
+    }
+
+    public synchronized void resetGame() {
         this.gameState = new GameState(10);
         GridGenerator.placeShips(gameState);
+        System.out.println(GridPrinter.toDebugAscii(gameState));
     }
 
     public void start() {
         System.out.println("Servidor iniciado en el puerto: " + port);
+        resetGame();
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("Cliente conectado en el puerto: " + port);
+                System.out.println("Cliente conectado");
 
-                ClientHandler handler = new ClientHandler(clientSocket, gameState);
+                ClientHandler handler = new ClientHandler(this, clientSocket, gameState);
                 new Thread(handler).start();
             }
         } catch (IOException e) {
-            e.printStackTrace();        }
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

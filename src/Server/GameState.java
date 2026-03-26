@@ -31,15 +31,11 @@ public class GameState {
         grid[row][col] = value;
     }
 
-    public void fireShot(int row, int col) {
-        shot[row][col] = true;
-    }
-
     public boolean getShot(int row, int col) {
         return shot[row][col];
     }
 
-    public ServerResponseType applyShot(int row, int col) {
+    public ServerResponseType fireShot(int row, int col) {
         if (shot[row][col]) {
             return ServerResponseType.ALREADY;
         }
@@ -93,5 +89,4 @@ public class GameState {
         }
         return true;
     }
-
 }

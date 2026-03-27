@@ -11,6 +11,7 @@ public class ServerMain {
     private GameState gameState;
 
     private final List<ClientHandler> clients = new ArrayList<>();
+    private boolean gameEnded = false;
 
     public ServerMain(int port) {
         this.port = port;
@@ -24,16 +25,26 @@ public class ServerMain {
         clients.remove(handler);
     }
 
+    public synchronized void setGameEnded(boolean value) {
+        this.gameEnded = value;
+    }
+
+    public synchronized void notifyGameOver() {
+        for (ClientHandler handler : clients) {
+            handler.sendGameOver();
+        }
+    }
+
     public synchronized void disconnectAllClients() {
         for (ClientHandler handler : clients) {
             handler.forceDisconnect();
         }
-        clients.clear();
     }
 
     public synchronized void onClientDisconnected() {
-        if (clients.isEmpty()) {
+        if (clients.isEmpty() && gameEnded) {
             resetGame();
+            gameEnded = false;
         }
     }
 

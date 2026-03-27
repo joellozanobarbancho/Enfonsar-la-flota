@@ -25,6 +25,14 @@ public class ClientHandler implements Runnable {
         } catch (Exception ignored) {}
     }
 
+    public void sendGameOver() {
+        try {
+            ServerResponse resp = new ServerResponse(ServerResponseType.WIN, "La partida ha terminado.");
+            out.writeObject(new Msg(MsgType.GAME_OVER, resp));
+            out.flush();
+        } catch (Exception ignored) {}
+    }
+
     private void sendGrid() throws Exception {
         String grid = GridPrinter.toVisibleAscii(gameState);
         out.writeObject(new Msg(MsgType.GRID_UPDATE, new GridUpdate(grid)));
@@ -50,9 +58,11 @@ public class ClientHandler implements Runnable {
             case WIN -> {
                 result = new ServerResponse(ServerResponseType.WIN, "¡Ganaste! Game Over");
                 out.writeObject(new Msg(MsgType.SHOT_RESULT, result));
+                server.notifyGameOver();
                 sendGrid();
-                socket.close();
+                Thread.sleep(150);
                 server.disconnectAllClients();
+                server.setGameEnded(true);
                 return;
             }
 
@@ -70,14 +80,7 @@ public class ClientHandler implements Runnable {
             out = new ObjectOutputStream(socket.getOutputStream());
             in  = new ObjectInputStream(socket.getInputStream());
 
-            // Registrar cliente en el servidor
             server.registerClient(this);
-
-            ServerResponse start = new ServerResponse(
-                    ServerResponseType.MISS,
-                    "Comienza la partida, dispara."
-            );
-            out.writeObject(new Msg(MsgType.SHOT_RESULT, start));
 
             sendGrid();
 
@@ -91,7 +94,7 @@ public class ClientHandler implements Runnable {
             }
 
         } catch (Exception e) {
-            System.out.println("El cliente se ha desconectado.");
+            System.out.println("Cliente desconectado.");
         } finally {
             server.unregisterClient(this);
             server.onClientDisconnected();

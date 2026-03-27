@@ -51,11 +51,13 @@ public class ServerMain {
     public synchronized void resetGame() {
         this.gameState = new GameState(10);
         GridGenerator.placeShips(gameState);
+        System.out.println();
         System.out.println(GridPrinter.toDebugAscii(gameState));
     }
 
     public void start() {
         System.out.println("Servidor iniciado en el puerto: " + port);
+        System.out.println();
         resetGame();
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {

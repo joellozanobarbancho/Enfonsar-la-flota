@@ -12,7 +12,7 @@ public class GridPrinter {
         int size = state.getSize();
         StringBuilder sb = new StringBuilder();
 
-        sb.append("\n     ");
+        sb.append("     ");
         for (int col = 1; col <= size; col++) {
             sb.append(COLOR_GREEN).append(col).append(" ").append(COLOR_RESET);
         }
@@ -52,7 +52,7 @@ public class GridPrinter {
         int size = state.getSize();
         StringBuilder sb = new StringBuilder();
 
-        sb.append("\n     ");
+        sb.append("     ");
         for (int col = 1; col <= size; col++) {
             sb.append(COLOR_GREEN).append(col).append(" ").append(COLOR_RESET);
         }

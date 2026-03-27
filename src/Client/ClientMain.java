@@ -52,6 +52,20 @@ public class ClientMain {
         }
     }
 
+    private int readInt(Scanner sc, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = sc.nextLine().trim();
+
+            if (input.matches("\\d+")) {
+                return Integer.parseInt(input);
+            }
+
+            System.out.println("Entrada inválida. Introduce un número del 1 al 10.");
+        }
+    }
+
+
     private void sendShot() throws Exception {
 
         if (socket.isClosed() || !socket.isConnected()) {
@@ -63,21 +77,15 @@ public class ClientMain {
         int col;
 
         while (true) {
-            System.out.println("Seleccione una fila:");
-            row = scanner.nextInt();
-
+            row = readInt(scanner, "Seleccione una fila: ");
             if (row >= 1 && row <= GRID_SIZE) break;
-
-            System.out.println("Fila fuera de rango. Inténtelo de nuevo.");
+            System.out.println("Fila fuera de rango. Introduce un número del 1 al 10.");
         }
 
         while (true) {
-            System.out.println("Seleccione una columna:");
-            col = scanner.nextInt();
-
+            col = readInt(scanner, "Seleccione una columna: ");
             if (col >= 1 && col <= GRID_SIZE) break;
-
-            System.out.println("Columna fuera de rango. Inténtelo de nuevo.");
+            System.out.println("Columna fuera de rango. Introduce un número del 1 al 10.");
         }
 
         row -= 1;

@@ -1,27 +1,25 @@
 package Server;
 
 public class GridPrinter {
-    private static final String SEPARATOR = "========================================";
-    public static final String COLOR_RED = "\u001B[31m";
+
+    public static final String COLOR_RED    = "\u001B[31m";
     public static final String COLOR_YELLOW = "\u001B[33m";
-    public static final String COLOR_BLUE = "\u001B[34m";
-    public static final String COLOR_GREEN = "\u001B[32m";
-    public static final String COLOR_RESET = "\u001B[0m";
+    public static final String COLOR_BLUE   = "\u001B[34m";
+    public static final String COLOR_GREEN  = "\u001B[32m";
+    public static final String COLOR_RESET  = "\u001B[0m";
 
     public static String toVisibleAscii(GameState state) {
         int size = state.getSize();
         StringBuilder sb = new StringBuilder();
 
-        System.out.println();
-        sb.append("     ");
+        sb.append("\n     ");
         for (int col = 1; col <= size; col++) {
             sb.append(COLOR_GREEN).append(col).append(" ").append(COLOR_RESET);
         }
-        sb.append("\n");
+        sb.append("\n     ");
 
-        sb.append("     ");
         for (int col = 0; col < size; col++) {
-            sb.append("_ ");
+            sb.append("─ ");
         }
         sb.append("\n");
 
@@ -32,13 +30,16 @@ public class GridPrinter {
 
                 if (!state.getShot(row, col)) {
                     sb.append("# ");
-                } else {
-                    int cell = state.getCell(row, col);
+                    continue;
+                }
 
-                    if (cell == 2) sb.append(COLOR_YELLOW + "1 " + COLOR_RESET);      // tocado
-                    else if (cell == 3) sb.append(COLOR_BLUE + "0 " + COLOR_RESET);   // agua
-                    else if (cell == 4) sb.append(COLOR_RED + "X " + COLOR_RESET);    // hundido
-                    else sb.append("# ");
+                int cell = state.getCell(row, col);
+
+                switch (cell) {
+                    case 2 -> sb.append(COLOR_YELLOW).append("1 ").append(COLOR_RESET); // tocado
+                    case 3 -> sb.append(COLOR_BLUE).append("0 ").append(COLOR_RESET);   // agua
+                    case 4 -> sb.append(COLOR_RED).append("X ").append(COLOR_RESET);    // hundido
+                    default -> sb.append("# ");
                 }
             }
             sb.append("\n");
@@ -51,14 +52,12 @@ public class GridPrinter {
         int size = state.getSize();
         StringBuilder sb = new StringBuilder();
 
-        System.out.println();
-        sb.append("     ");
+        sb.append("\n     ");
         for (int col = 1; col <= size; col++) {
             sb.append(COLOR_GREEN).append(col).append(" ").append(COLOR_RESET);
         }
-        sb.append("\n");
+        sb.append("\n     ");
 
-        sb.append("     ");
         for (int col = 0; col < size; col++) {
             sb.append("─ ");
         }
@@ -70,8 +69,10 @@ public class GridPrinter {
             for (int col = 0; col < size; col++) {
                 int cell = state.getCell(row, col);
 
-                if (cell == 1) sb.append(COLOR_RED + "X " + COLOR_RESET);
-                else sb.append(COLOR_BLUE + "0 " + COLOR_RESET);
+                if (cell == 1)
+                    sb.append(COLOR_RED).append("X ").append(COLOR_RESET);
+                else
+                    sb.append(COLOR_BLUE).append("0 ").append(COLOR_RESET);
             }
             sb.append("\n");
         }

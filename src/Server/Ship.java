@@ -4,12 +4,13 @@ import Utils.Coordinate;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Ship implements Serializable {
 
-    private final List<Coordinate> cells;     // casillas que ocupa el barco
-    private final List<Coordinate> hits;      // casillas tocadas
+    private final List<Coordinate> cells;   // casillas que ocupa el barco
+    private final List<Coordinate> hits;    // casillas tocadas
 
     public Ship() {
         this.cells = new ArrayList<>();
@@ -36,7 +37,6 @@ public class Ship implements Serializable {
     }
 
     public List<Coordinate> getCells() {
-        return cells;
+        return Collections.unmodifiableList(cells);
     }
 }
-

@@ -25,21 +25,21 @@ public class ClientMain {
             while (true) {
                 Msg msg = (Msg) in.readObject();
 
-                switch (msg.getType()) {
+                switch (msg.type()) {
 
                     case GRID_UPDATE -> {
-                        GridUpdate update = (GridUpdate) msg.getPayload();
+                        GridUpdate update = (GridUpdate) msg.data();
                         System.out.println();
                         System.out.println(update.getGrid());
                         sendShot();
                     }
 
                     case SHOT_RESULT -> {
-                        ServerResponse response = (ServerResponse) msg.getPayload();
+                        ServerResponse response = (ServerResponse) msg.data();
                         System.out.println();
-                        System.out.println(response.getMessage());
+                        System.out.println(response.message());
 
-                        if (response.getType() == ServerResponseType.WIN) return;
+                        if (response.type() == ServerResponseType.WIN) return;
                     }
 
                     default -> System.out.println("Unknown msg type...");

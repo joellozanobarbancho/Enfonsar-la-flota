@@ -21,7 +21,7 @@ public class ClientHandler implements Runnable {
 
     public void forceDisconnect() {
         try {
-            socket.close();
+            if (!socket.isClosed()) socket.close();
         } catch (Exception ignored) {}
     }
 
@@ -36,6 +36,7 @@ public class ClientHandler implements Runnable {
     private void sendGrid() throws Exception {
         String grid = GridPrinter.toVisibleAscii(gameState);
         out.writeObject(new Msg(MsgType.GRID_UPDATE, new GridUpdate(grid)));
+        out.flush();
     }
 
     private void handleShot(Coordinate c) throws Exception {
@@ -58,6 +59,7 @@ public class ClientHandler implements Runnable {
             case WIN -> {
                 result = new ServerResponse(ServerResponseType.WIN, "¡Ganaste! Game Over");
                 out.writeObject(new Msg(MsgType.SHOT_RESULT, result));
+                out.flush();
                 server.notifyGameOver();
                 sendGrid();
                 Thread.sleep(150);
@@ -71,6 +73,7 @@ public class ClientHandler implements Runnable {
         }
 
         out.writeObject(new Msg(MsgType.SHOT_RESULT, result));
+        out.flush();
         sendGrid();
     }
 
@@ -87,8 +90,8 @@ public class ClientHandler implements Runnable {
             while (true) {
                 Msg msg = (Msg) in.readObject();
 
-                if (msg.getType() == MsgType.SHOT) {
-                    Coordinate c = (Coordinate) msg.getPayload();
+                if (msg.type() == MsgType.SHOT) {
+                    Coordinate c = (Coordinate) msg.data();
                     handleShot(c);
                 }
             }
